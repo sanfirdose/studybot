@@ -12,6 +12,8 @@ from pydantic import BaseModel
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 mongo_uri = os.getenv("MONGO_URI")
+print("GROQ:", groq_api_key)
+print("MONGO:", mongo_uri)
 
 client = MongoClient(mongo_uri)
 db=client["studybuddy"]
@@ -53,16 +55,6 @@ def home():
     return {"message": "Welcome to Study Buddy!"}
 
 
-@app.get("/favicon.ico", include_in_schema=False)
-def favicon():
-        svg = """
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>
-            <rect width='100%' height='100%' fill='#4F46E5'/>
-            <text x='50%' y='50%' fill='white' dominant-baseline='middle' text-anchor='middle' font-size='10'>SB</text>
-        </svg>
-        """
-        return Response(content=svg, media_type="image/svg+xml")
-
 @app.post("/chat")
 def chat(request: ChatRequest): 
     history = get_history(request.user_id)
@@ -81,4 +73,3 @@ def chat(request: ChatRequest):
         "timestamp": datetime.utcnow()})
 
     return {"response": response.content}
-
